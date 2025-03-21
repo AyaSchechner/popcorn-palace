@@ -14,4 +14,5 @@ ON CONFLICT (theater, start_time) DO NOTHING;
 INSERT INTO tickets (showtime_id, customer_name, seat_number) VALUES
 (1, 'John Doe', 5),
 (1, 'Jane Doe', 6),
-(2, 'Alice Smith', 3);
+(2, 'Alice Smith', 3)
+ON CONFLICT (showtime_id, seat_number) DO NOTHING;

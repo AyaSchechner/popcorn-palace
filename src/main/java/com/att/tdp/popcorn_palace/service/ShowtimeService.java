@@ -2,11 +2,9 @@ package com.att.tdp.popcorn_palace.service;
 
 import com.att.tdp.popcorn_palace.model.Showtime;
 import com.att.tdp.popcorn_palace.repository.ShowtimeRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-// import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,18 +39,17 @@ public class ShowtimeService {
     }
 
     // Update an existing showtime
-    public Showtime updateShowtime(Long id, Showtime updatedShowtime) {
-        Optional<Showtime> existingShowtime = showtimeRepository.findById(id);
-        if (existingShowtime.isPresent()) {
-            Showtime showtime = existingShowtime.get();
-            showtime.setTheater(updatedShowtime.getTheater());
-            showtime.setStartTime(updatedShowtime.getStartTime());
-            showtime.setEndTime(updatedShowtime.getEndTime());
-            showtime.setPrice(updatedShowtime.getPrice());
-            return showtimeRepository.save(showtime);
-        } else {
-            throw new RuntimeException("Showtime not found.");
-        }
+    public Showtime updateShowtime(Long id, Showtime updated) {
+        Showtime showtime = showtimeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Showtime with ID " + id + " not found."));
+
+        showtime.setTheater(updated.getTheater());
+        showtime.setStartTime(updated.getStartTime());
+        showtime.setEndTime(updated.getEndTime());
+        showtime.setPrice(updated.getPrice());
+        showtime.setMovie(updated.getMovie());
+
+        return showtimeRepository.save(showtime);
     }
 
     // Delete a showtime by id

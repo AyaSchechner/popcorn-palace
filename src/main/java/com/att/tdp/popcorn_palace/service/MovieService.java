@@ -1,19 +1,18 @@
 package com.att.tdp.popcorn_palace.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.att.tdp.popcorn_palace.model.Movie;
 import com.att.tdp.popcorn_palace.repository.MovieRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class MovieService {
+
     @Autowired
     private MovieRepository movieRepository;
-
 
     // Validate movie before saving
     private String validateMovie(Movie movie) {
@@ -39,7 +38,7 @@ public class MovieService {
     public Movie addMovie(Movie movie) {
         String validationError = validateMovie(movie);
         if (validationError != null) {
-            throw new RuntimeException(validationError);
+            throw new IllegalArgumentException(validationError);
         }
         return movieRepository.save(movie);
     }
@@ -54,32 +53,31 @@ public class MovieService {
         return movieRepository.findById(id);
     }
 
-    // Update an existing movie
-    public Movie updateMovie(Long id, Movie updatedMovie) {
-        Optional<Movie> existingMovie = movieRepository.findById(id);
-        if (existingMovie.isPresent()) {
-            String validationError = validateMovie(updatedMovie);
-            if (validationError != null) {
-                throw new RuntimeException(validationError);
-            }
-            Movie movie = existingMovie.get();
-            movie.setTitle(updatedMovie.getTitle());
-            movie.setGenre(updatedMovie.getGenre());
-            movie.setDuration(updatedMovie.getDuration());
-            movie.setRating(updatedMovie.getRating());
-            movie.setReleaseYear(updatedMovie.getReleaseYear());
-            return movieRepository.save(movie);
-        } else {
-            throw new RuntimeException("Movie not found.");
+    // Update an existing movie by title
+    public Movie updateMovie(String movieTitle, Movie updatedMovie) {
+        Movie movie = movieRepository.findByTitle(movieTitle)
+        .orElseThrow(() -> new IllegalArgumentException("Movie with title '" + movieTitle + "' not found."));
+
+        String validationError = validateMovie(updatedMovie);
+        if (validationError != null) {
+            throw new IllegalArgumentException(validationError);
         }
+
+        movie.setTitle(updatedMovie.getTitle());
+        movie.setGenre(updatedMovie.getGenre());
+        movie.setDuration(updatedMovie.getDuration());
+        movie.setRating(updatedMovie.getRating());
+        movie.setReleaseYear(updatedMovie.getReleaseYear());
+
+        return movieRepository.save(movie);        
     }
 
     // Delete a movie by ID
-    public boolean deleteMovie(Long id) {
-        if (movieRepository.existsById(id)) {
-            movieRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public boolean deleteMovieByTitle(String movieTitle) {
+        Movie movie = movieRepository.findByTitle(movieTitle)
+                .orElseThrow(() -> new IllegalArgumentException("Movie with title '" + movieTitle + "' not found."));
+        movieRepository.delete(movie);
+        return true;
     }
+    
 }

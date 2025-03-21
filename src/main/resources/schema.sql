@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS showtimes (
 CREATE TABLE IF NOT EXISTS tickets (
     id SERIAL PRIMARY KEY,
     showtime_id INT NOT NULL,
-    customer_name VARCHAR(100) NOT NULL,
+    userId VARCHAR(255) NOT NULL,
     seat_number INT NOT NULL,
     CONSTRAINT unique_ticket UNIQUE (showtime_id, seat_number),
     FOREIGN KEY (showtime_id) REFERENCES showtimes(id) ON DELETE CASCADE

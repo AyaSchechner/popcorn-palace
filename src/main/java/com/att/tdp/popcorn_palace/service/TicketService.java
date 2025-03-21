@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TicketService {
@@ -20,26 +19,27 @@ public class TicketService {
     private ShowtimeRepository showtimeRepository;
 
     // Book a ticket (Ensures no duplicate bookings)
-    public Ticket bookTicket(Long showtimeId, String customerName, int seatNumber) {
-        // Check if showtime exists
-        Optional<Showtime> showtimeOptional = showtimeRepository.findById(showtimeId);
-        if (showtimeOptional.isEmpty()) {
-            throw new RuntimeException("Showtime not found.");
+    public Ticket bookTicket(Long showtimeId, String userId, int seatNumber) {
+        if (seatNumber <= 0) {
+            throw new IllegalArgumentException("Seat number must be a positive integer.");
         }
+        // Check if showtime exists
+        Showtime showtime = showtimeRepository.findById(showtimeId)
+                .orElseThrow(() -> new IllegalArgumentException("Showtime with ID " + showtimeId + " not found."));
 
         // Check if seat is already booked
         if (ticketRepository.findByShowtimeIdAndSeatNumber(showtimeId, seatNumber).isPresent()) {
-            throw new RuntimeException("Seat " + seatNumber + " is already booked for this showtime.");
+            throw new IllegalArgumentException("Seat " + seatNumber + " is already booked for this showtime.");
         }
 
         // Save the ticket
-        Ticket ticket = new Ticket(showtimeOptional.get(), customerName, seatNumber);
+        Ticket ticket = new Ticket(showtime, userId, seatNumber);
         return ticketRepository.save(ticket);
     }
 
     // Get all tickets for a showtime
     public List<Ticket> getTicketsForShowtime(Long showtimeId) {
-        return ticketRepository.findAll();
+        return ticketRepository.findByShowtimeId(showtimeId);
     }
 
     // Cancel a ticket
