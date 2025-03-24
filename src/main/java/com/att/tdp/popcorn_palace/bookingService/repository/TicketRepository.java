@@ -1,8 +1,9 @@
-package com.att.tdp.popcorn_palace.repository;
+package com.att.tdp.popcorn_palace.bookingService.repository;
 
-import com.att.tdp.popcorn_palace.model.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.att.tdp.popcorn_palace.bookingService.model.Ticket;
 
 import java.util.List;
 import java.util.Optional;

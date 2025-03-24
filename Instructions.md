@@ -1,4 +1,4 @@
-# Instructions for Popcorn Palace Backend
+# Instructions for Popcorn Palace
 
 ## Prerequisites
 
@@ -69,7 +69,22 @@ To execute unit tests:
 ```
 You should see `BUILD SUCCESS` and all tests passing.
 
+### Manual API Testing
+
+A requestsTest.http file is included for manual testing using tools like VS Code (REST Client), IntelliJ HTTP client, or Postman.
+
+It demonstrates:
+
+Movie creation, update, retrieval, and deletion
+
+Showtime creation, update, retrieval, and deletion
+
+Ticket booking, including edge cases (e.g., duplicate seat, invalid input)
+
+Use it to quickly validate API behavior beyond automated tests.
+
 ---
+
 
 ## API Endpoints Summary
 
@@ -78,6 +93,7 @@ You should see `BUILD SUCCESS` and all tests passing.
 | Method | Endpoint                  | Description             |
 |--------|---------------------------|-------------------------|
 | GET    | `/movies/all`             | Get all movies          |
+| GET    | `/movies/{id}`            | Get movie by ID         |
 | POST   | `/movies`                 | Add new movie           |
 | POST   | `/movies/update/{title}`  | Update movie by title   |
 | DELETE | `/movies/{title}`         | Delete movie by title   |
@@ -94,13 +110,13 @@ You should see `BUILD SUCCESS` and all tests passing.
 
 ### Showtimes
 
-| Method | Endpoint                          | Description             |
-|--------|-----------------------------------|-------------------------|
-| GET    | `/showtimes`                      | Get all showtimes       |
-| GET    | `/showtimes/{id}`                 | Get showtime by ID      |
-| POST   | `/showtimes`                      | Add a new showtime      |
-| POST   | `/showtimes/update/{id}`          | Update showtime by ID   |
-| DELETE | `/showtimes/{id}`                 | Delete showtime by ID   |
+| Method | Endpoint                          | Description                             |
+|--------|-----------------------------------|-----------------------------------------|
+| GET    | `/showtimes/{id}`                 | Get showtime by ID                      |
+| POST   | `/showtimes`                      | Add a new showtime                      |
+| POST   | `/showtimes/update/{id}`          | Update showtime by ID                   |
+| DELETE | `/showtimes/{id}`                 | Delete showtime by ID                   |
+| GET    | `/showtimes/all`                  | Get all showtimes (**debugging only**)  |
 
 #### Showtime Constraints:
 
@@ -115,14 +131,12 @@ You should see `BUILD SUCCESS` and all tests passing.
 | Method | Endpoint         | Description              |
 |--------|------------------|--------------------------|
 | POST   | `/bookings`      | Book a ticket            |
-| GET    | `/bookings/{id}` | Get tickets for showtime |
-| DELETE | `/bookings/{id}` | Cancel a ticket          |
 
 #### Booking Constraints:
 
 - Cannot book same `seatNumber` for a showtime twice
 - `userId`: required
-- `seatNumber`: must be a **positive integer**
+- `seatNumber`: must be a positive integer
 
 ---
-
+ 

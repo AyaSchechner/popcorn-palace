@@ -4,14 +4,15 @@ INSERT INTO task ( description, completed) VALUES
 
 INSERT INTO movies (title, genre, duration, rating, release_year) VALUES
 ('Inception', 'Sci-Fi', 148, 8.8, 2010),
-('Interstellar', 'Sci-Fi', 169, 8.6, 2014);
+('Interstellar', 'Sci-Fi', 169, 8.6, 2014)
+ON CONFLICT (title, release_year) DO NOTHING;
 
 INSERT INTO showtimes (movie_id, theater, start_time, end_time, price) VALUES
 (1, 'CinemaX Hall 2', '2025-03-19 18:00:00', '2025-03-19 20:30:00', 15),
 (2, 'CinemaX Hall 2', '2025-03-19 21:00:00', '2025-03-19 23:30:00', 15)
 ON CONFLICT (theater, start_time) DO NOTHING;
 
-INSERT INTO tickets (showtime_id, customer_name, seat_number) VALUES
+INSERT INTO tickets (showtime_id, user_id, seat_number) VALUES
 (1, 'John Doe', 5),
 (1, 'Jane Doe', 6),
 (2, 'Alice Smith', 3)

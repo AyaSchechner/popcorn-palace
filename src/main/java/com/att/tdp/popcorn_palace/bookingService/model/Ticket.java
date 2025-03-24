@@ -1,4 +1,6 @@
-package com.att.tdp.popcorn_palace.model;
+package com.att.tdp.popcorn_palace.bookingService.model;
+
+import com.att.tdp.popcorn_palace.showtimeService.model.Showtime;
 
 import jakarta.persistence.*;
 
@@ -15,7 +17,7 @@ public class Ticket {
     @JoinColumn(name = "showtime_id", nullable = false)
     private Showtime showtime;
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "user_id", nullable = false, length = 255)
     private String userId;
 
     @Column(nullable = false)

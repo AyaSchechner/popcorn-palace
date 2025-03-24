@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS movies (
     genre VARCHAR(100) NOT NULL,
     duration INT NOT NULL,
     rating DOUBLE PRECISION CHECK (rating BETWEEN 0 AND 10),
-    release_year INT NOT NULL
+    release_year INT NOT NULL,
+    CONSTRAINT unique_title_year UNIQUE (title, release_year)
 );
 
 CREATE TABLE IF NOT EXISTS showtimes (
@@ -25,7 +26,7 @@ CREATE TABLE IF NOT EXISTS showtimes (
 CREATE TABLE IF NOT EXISTS tickets (
     id SERIAL PRIMARY KEY,
     showtime_id INT NOT NULL,
-    userId VARCHAR(255) NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
     seat_number INT NOT NULL,
     CONSTRAINT unique_ticket UNIQUE (showtime_id, seat_number),
     FOREIGN KEY (showtime_id) REFERENCES showtimes(id) ON DELETE CASCADE

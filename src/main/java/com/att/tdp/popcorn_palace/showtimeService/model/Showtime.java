@@ -1,7 +1,9 @@
-package com.att.tdp.popcorn_palace.model;
+package com.att.tdp.popcorn_palace.showtimeService.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import com.att.tdp.popcorn_palace.movieService.model.Movie;
 
 @Entity
 @Table(name = "showtimes", uniqueConstraints = {

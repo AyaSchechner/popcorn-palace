@@ -1,0 +1,132 @@
+### Create a new movie
+POST http://localhost:8080/movies
+Content-Type: application/json
+
+{
+  "title": "The Matrix",
+  "genre": "Sci-Fi",
+  "duration": 136,
+  "rating": 8.7,
+  "releaseYear": 1999
+}
+
+
+### Get all movies
+GET http://localhost:8080/movies/all
+
+
+### Update "The Matrix" movie
+POST http://localhost:8080/movies/update/The Matrix
+Content-Type: application/json
+
+{
+  "title": "The Matrix",
+  "genre": "Action/Sci-Fi",
+  "duration": 140,
+  "rating": 9.0,
+  "releaseYear": 1999
+}
+
+
+### Delete movie by title
+DELETE http://localhost:8080/movies/The Matrix
+
+
+### Get showtime by ID
+GET http://localhost:8080/showtimes/1
+
+
+### Add a showtime
+POST http://localhost:8080/showtimes
+Content-Type: application/json
+
+{
+  "movieId": 2,
+  "price": 20.2,
+  "theater": "Sample Theater",
+  "startTime": "2025-02-15T11:47:46.125405Z",
+  "endTime": "2025-02-15T14:47:46.125405Z"
+}
+
+### Get all showtimes (debugging)
+GET http://localhost:8080/showtimes/all
+
+
+### Add a showtime
+POST http://localhost:8080/showtimes
+Content-Type: application/json
+
+{
+  "movieId": 1,
+  "price": 50.2,
+  "theater": "Sample Theater",
+  "startTime": "2025-02-14T11:47:46.125405Z",
+  "endTime": "2025-02-14T14:47:46.125405Z"
+}
+
+### Update a showtime
+POST http://localhost:8080/showtimes/update/1
+Content-Type: application/json
+
+{
+  "movieId": 1,
+  "price": 60.0,
+  "theater": "Updated Theater",
+  "startTime": "2025-02-14T12:00:00.000000Z",
+  "endTime": "2025-02-14T15:00:00.000000Z"
+}
+
+### Delete a showtime
+DELETE http://localhost:8080/showtimes/1
+
+
+### Book a ticket (valid)
+POST http://localhost:8080/bookings
+Content-Type: application/json
+
+{
+  "showtimeId": 2,
+  "seatNumber": 5,
+  "userId": "user-001"
+}
+
+### Book another ticket
+POST http://localhost:8080/bookings
+Content-Type: application/json
+
+{
+  "showtimeId": 3,
+  "seatNumber": 12,
+  "userId": "user-002"
+}
+
+### Book with existing seat (should fail)
+POST http://localhost:8080/bookings
+Content-Type: application/json
+
+{
+  "showtimeId": 2,
+  "seatNumber": 5,
+  "userId": "user-003"
+}
+
+### Book with invalid showtime ID
+POST http://localhost:8080/bookings
+Content-Type: application/json
+
+{
+  "showtimeId": 999,
+  "seatNumber": 1,
+  "userId": "user-004"
+}
+
+### Book with invalid seat number
+POST http://localhost:8080/bookings
+Content-Type: application/json
+
+{
+  "showtimeId": 4,
+  "seatNumber": -3,
+  "userId": "user-005"
+}
+

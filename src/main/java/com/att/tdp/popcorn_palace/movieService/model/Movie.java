@@ -1,7 +1,9 @@
-package com.att.tdp.popcorn_palace.model;
+package com.att.tdp.popcorn_palace.movieService.model;
 
 import jakarta.persistence.*;
 import java.util.List;
+
+import com.att.tdp.popcorn_palace.showtimeService.model.Showtime;
 
 @Entity
 @Table(name = "movies")
@@ -54,9 +56,7 @@ public class Movie {
     public void setDuration(int duration) { this.duration = duration; }
 
     public double getRating() { return rating; }
-    public void setRating(double rating) { 
-        this.rating = rating; 
-    }
+    public void setRating(double rating) { this.rating = rating; }
 
     public int getReleaseYear() { return releaseYear; }
     public void setReleaseYear(int releaseYear) { this.releaseYear = releaseYear; }

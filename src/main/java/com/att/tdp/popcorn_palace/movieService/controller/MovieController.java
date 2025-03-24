@@ -1,12 +1,12 @@
-package com.att.tdp.popcorn_palace.controller;
+package com.att.tdp.popcorn_palace.movieService.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.att.tdp.popcorn_palace.model.Movie;
-import com.att.tdp.popcorn_palace.service.MovieService;
+import com.att.tdp.popcorn_palace.movieService.model.Movie;
+import com.att.tdp.popcorn_palace.movieService.service.MovieService;
 
 import java.util.*;
 
@@ -40,18 +40,25 @@ public class MovieController {
 
     // Get a movie by id
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
+    public ResponseEntity<?> getMovieById(@PathVariable Long id) {          
         return movieService.getMovieById(id)
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        .<ResponseEntity<?>>map(ResponseEntity::ok)
+        .orElseGet(() -> createErrorResponse(HttpStatus.NOT_FOUND, "Movie not found."));
     }
 
     // Update movie by title
     @PostMapping("/update/{movieTitle}")
     public ResponseEntity<?> updateMovie(@PathVariable String movieTitle, @RequestBody Movie updatedMovie) {
+        if (updatedMovie == null) {
+            return createErrorResponse(HttpStatus.BAD_REQUEST, "Request body for movie update is missing.");
+        }
+    
         try {
-            Movie movie = movieService.updateMovie(movieTitle, updatedMovie);
-            return ResponseEntity.ok(movie); // Return the updated movie with 200 OK status
+            Optional<Movie> movie = movieService.updateMovie(movieTitle, updatedMovie);
+            if (movie.isEmpty()) {
+                return createErrorResponse(HttpStatus.NOT_FOUND, "Movie with title '" + movieTitle + "' not found.");
+            }
+            return ResponseEntity.ok().build(); // 200 OK with no body
         } catch (IllegalArgumentException e) {
             return createErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -60,18 +67,14 @@ public class MovieController {
     // Delete a movie by title
     @DeleteMapping("/{movieTitle}")
     public ResponseEntity<?> deleteMovie(@PathVariable String movieTitle) {
-        try {
-            if (movieService.deleteMovieByTitle(movieTitle)) {
-                return ResponseEntity.ok("Movie deleted successfully.");
-            }
-        } catch (IllegalArgumentException e) {
-            return createErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        boolean deleted = movieService.deleteMovieByTitle(movieTitle);
+        if (deleted) {
+            return ResponseEntity.ok().build(); // no body on success
         }
         return createErrorResponse(HttpStatus.NOT_FOUND, "Movie not found.");
     }
 
-
-    // Helper Method: Create a structured JSON error response
+    // Creates a structured JSON error response
     private ResponseEntity<Map<String, String>> createErrorResponse(HttpStatus status, String message) {
         Map<String, String> error = new HashMap<>();
         error.put("error", message);
